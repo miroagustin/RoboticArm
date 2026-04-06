@@ -1,0 +1,43 @@
+# Logs y artefactos locales
+logs/
+*.log
+runs/
+.claude/
+robotic-arm-agent/.reme
+robotic-arm-agent/logs
+.repo-metadata/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.egg
+.coverage
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+dist/
+build/
+install/
+log/
+
+# Virtual environments
+venv_ai/
+venv/
+.venv/
+env/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+*.swp
