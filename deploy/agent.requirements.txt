@@ -1,0 +1,4 @@
+agentscope==1.0.18
+reme-ai==0.3.1.6
+mcp==1.26.0
+

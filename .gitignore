@@ -3,7 +3,8 @@ logs/
 *.log
 runs/
 .claude/
-robotic-arm-agent/.reme
+robotic-arm-agent/.reme/
+.reme
 robotic-arm-agent/logs
 .repo-metadata/
 

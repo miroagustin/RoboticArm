@@ -1,0 +1,22 @@
+{
+  "_comment": "Example Aruco calibration. Replace intrinsics, T_base_cam and markers with values from your own calibration. Units: mm and degrees.",
+  "camera_matrix": [
+    [900.0,   0.0, 640.0],
+    [  0.0, 900.0, 360.0],
+    [  0.0,   0.0,   1.0]
+  ],
+  "dist_coeffs": [0.0, 0.0, 0.0, 0.0, 0.0],
+  "marker_size_mm": 40.0,
+  "dictionary": "DICT_4X4_50",
+  "T_base_cam": [
+    [1.0, 0.0, 0.0,   0.0],
+    [0.0, 1.0, 0.0,   0.0],
+    [0.0, 0.0, 1.0, 300.0],
+    [0.0, 0.0, 0.0,   1.0]
+  ],
+  "markers": {
+    "0": "taza",
+    "1": "lapicera",
+    "2": "cuaderno"
+  }
+}

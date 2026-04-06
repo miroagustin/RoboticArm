@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cyclonedds-config
+data:
+  cyclonedds.xml: |
+    <?xml version="1.0" encoding="UTF-8"?>
+    <CycloneDDS xmlns="https://cdds.io/config">
+      <Domain Id="any">
+        <General>
+          <AllowMulticast>false</AllowMulticast>
+          <Interfaces>
+            <NetworkInterface autodetermine="true" />
+          </Interfaces>
+        </General>
+        <Discovery>
+          <ParticipantIndex>auto</ParticipantIndex>
+          <MaxAutoParticipantIndex>32</MaxAutoParticipantIndex>
+          <Peers>
+            <Peer Address="arm-mcp-sim.arm.svc.cluster.local" />
+            <Peer Address="arm-viz.arm.svc.cluster.local" />
+          </Peers>
+        </Discovery>
+      </Domain>
+    </CycloneDDS>
+

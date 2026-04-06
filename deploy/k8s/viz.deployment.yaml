@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: arm-viz
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: arm-viz
+  template:
+    metadata:
+      labels:
+        app: arm-viz
+    spec:
+      containers:
+        - name: arm-viz
+          image: robotic-arm/arm-viz:local
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: VIZ_MODE
+              value: novnc
+            - name: NOVNC_PORT
+              value: "6080"
+            - name: ROS_DOMAIN_ID
+              value: "42"
+            - name: RMW_IMPLEMENTATION
+              value: rmw_cyclonedds_cpp
+            - name: CYCLONEDDS_URI
+              value: file:///config/cyclonedds.xml
+          ports:
+            - containerPort: 6080
+              name: novnc
+          volumeMounts:
+            - name: cyclonedds-config
+              mountPath: /config
+              readOnly: true
+      volumes:
+        - name: cyclonedds-config
+          configMap:
+            name: cyclonedds-config
+

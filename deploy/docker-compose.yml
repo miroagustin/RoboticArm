@@ -1,0 +1,105 @@
+services:
+  arm-mcp-sim:
+    image: robotic-arm/arm-mcp-sim:local
+    build:
+      context: ..
+      dockerfile: deploy/mcp-sim.Dockerfile
+    environment:
+      MCP_HOST: 0.0.0.0
+      MCP_PORT: 8010
+      MCP_BACKEND: ros2
+      MCP_API_KEY: ${MCP_API_KEY:-}
+      MCP_SAFETY_PROFILE: ${MCP_SAFETY_PROFILE:-testing}
+      MCP_PLANNER: ${MCP_PLANNER:-basic}
+      MCP_PLANNER_SYNC_PERCEPTION: ${MCP_PLANNER_SYNC_PERCEPTION:-true}
+      MCP_PLANNER_CLEARANCE_MM: ${MCP_PLANNER_CLEARANCE_MM:-80}
+      MCP_COLLISION_PADDING_MM: ${MCP_COLLISION_PADDING_MM:-15}
+      MCP_PERCEPTION: ${MCP_PERCEPTION:-mock}
+      MCP_PERCEPTION_CALIBRATION: ${MCP_PERCEPTION_CALIBRATION:-}
+      MCP_PERCEPTION_CAMERA: ${MCP_PERCEPTION_CAMERA:-0}
+      MCP_PERCEPTION_MOCK_FILE: ${MCP_PERCEPTION_MOCK_FILE:-}
+      ROS_DOMAIN_ID: ${ROS_DOMAIN_ID:-42}
+      RMW_IMPLEMENTATION: rmw_cyclonedds_cpp
+      CYCLONEDDS_URI: file:///config/cyclonedds.xml
+    volumes:
+      - ./cyclonedds.xml:/config/cyclonedds.xml:ro
+    ports:
+      - "8010:8010"
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8010/healthz"]
+      interval: 5s
+      timeout: 3s
+      retries: 15
+      start_period: 8s
+
+  arm-viz:
+    image: robotic-arm/arm-viz:local
+    profiles: ["viz"]
+    build:
+      context: ..
+      dockerfile: deploy/viz.Dockerfile
+    depends_on:
+      arm-mcp-sim:
+        condition: service_healthy
+    environment:
+      DISPLAY: ${DISPLAY:-:0}
+      VIZ_MODE: x11
+      ROS_DOMAIN_ID: ${ROS_DOMAIN_ID:-42}
+      RMW_IMPLEMENTATION: rmw_cyclonedds_cpp
+      CYCLONEDDS_URI: file:///config/cyclonedds.xml
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - ./cyclonedds.xml:/config/cyclonedds.xml:ro
+
+  arm-viz-remote:
+    image: robotic-arm/arm-viz:local
+    profiles: ["viz-remote"]
+    build:
+      context: ..
+      dockerfile: deploy/viz.Dockerfile
+    depends_on:
+      arm-mcp-sim:
+        condition: service_healthy
+    environment:
+      VIZ_MODE: novnc
+      NOVNC_PORT: ${NOVNC_PORT:-6080}
+      ROS_DOMAIN_ID: ${ROS_DOMAIN_ID:-42}
+      RMW_IMPLEMENTATION: rmw_cyclonedds_cpp
+      CYCLONEDDS_URI: file:///config/cyclonedds.xml
+    volumes:
+      - ./cyclonedds.xml:/config/cyclonedds.xml:ro
+    ports:
+      - "${NOVNC_PORT:-6080}:6080"
+    networks:
+      default:
+        aliases:
+          - arm-viz
+
+  arm-agent:
+    image: robotic-arm/arm-agent:local
+    build:
+      context: ..
+      dockerfile: deploy/agent.Dockerfile
+    depends_on:
+      arm-mcp-sim:
+        condition: service_healthy
+    environment:
+      MCP_URL: http://arm-mcp-sim:8010/mcp
+      MCP_API_KEY: ${MCP_API_KEY:-}
+      LLM_API_BASE: ${LLM_API_BASE:-http://host.docker.internal:8000/v1}
+      AGENTSCOPE_STUDIO_URL: ${AGENTSCOPE_STUDIO_URL:-http://host.docker.internal:3000}
+      MODEL_NAME: ${MODEL_NAME:-Qwen/Qwen2.5-7B-Instruct-AWQ}
+      REME_WORKING_DIR: /app/robotic-arm-agent/.reme
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ../robotic-arm-agent/.reme:/app/robotic-arm-agent/.reme
+      - ../robotic-arm-agent/logs:/app/robotic-arm-agent/logs
+    healthcheck:
+      test: ["CMD", "python", "smoke.py", "check-mcp"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+    stdin_open: true
+    tty: true

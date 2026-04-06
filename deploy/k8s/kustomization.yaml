@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: arm
+resources:
+  - namespace.yaml
+  - configmap-cyclonedds.yaml
+  - secret-mcp-key.yaml
+  - mcp-sim.deployment.yaml
+  - mcp-sim.service.yaml
+  - agent.deployment.yaml
+  - viz.deployment.yaml
+  - viz.service.yaml
+
