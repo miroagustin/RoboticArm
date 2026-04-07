@@ -1,4 +1,9 @@
 services:
+  as-studio:
+    image: agentscope/studio:latest
+    ports:
+      - "${AS_STUDIO_PORT:-3000}:3000"
+
   arm-mcp-sim:
     image: robotic-arm/arm-mcp-sim:local
     build:
@@ -87,7 +92,7 @@ services:
       MCP_URL: http://arm-mcp-sim:8010/mcp
       MCP_API_KEY: ${MCP_API_KEY:-}
       LLM_API_BASE: ${LLM_API_BASE:-http://host.docker.internal:8000/v1}
-      AGENTSCOPE_STUDIO_URL: ${AGENTSCOPE_STUDIO_URL:-http://host.docker.internal:3000}
+      AGENTSCOPE_STUDIO_URL: ${AGENTSCOPE_STUDIO_URL:-http://as-studio:3000}
       MODEL_NAME: ${MODEL_NAME:-Qwen/Qwen2.5-7B-Instruct-AWQ}
       REME_WORKING_DIR: /app/robotic-arm-agent/.reme
     extra_hosts:

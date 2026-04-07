@@ -30,7 +30,8 @@ cp .env.example .env
 ```bash
 MCP_API_KEY=tu-clave
 LLM_API_BASE=http://host.docker.internal:8000/v1
-AGENTSCOPE_STUDIO_URL=http://host.docker.internal:3000
+AGENTSCOPE_STUDIO_URL=http://as-studio:3000
+AS_STUDIO_PORT=3000
 DISPLAY=:0
 MCP_PLANNER=moveit2
 ```
@@ -44,6 +45,51 @@ make build
 La primera vez tarda bastante porque `base.Dockerfile` clona `mycobot_ros2` y corre `colcon build`.
 
 ## Uso
+
+### Primer uso con AgentScope Studio
+
+`make up` ahora levanta la UI completa del stack para entorno local:
+
+1. Configurar `.env`
+2. Correr `make build`
+3. Correr `make up`
+4. Abrir las URLs locales impresas por el comando
+5. Probar primero `make smoke` o `make scenario`
+6. Si queres conversar en vivo con el agente, hacer `attach`
+
+Flujo tipico:
+
+```bash
+cp .env.example .env
+make build
+make up
+make smoke
+make scenario PROMPT="Decime que tools tenes disponibles y no muevas nada"
+```
+
+Sesion interactiva opcional:
+
+```bash
+docker compose --env-file .env -f deploy/docker-compose.yml attach arm-agent
+```
+
+`make up` imprime, como minimo:
+
+- `AgentScope Studio`: `http://localhost:${AS_STUDIO_PORT}`
+- `Viz remota`: `http://localhost:${NOVNC_PORT}/vnc.html`
+- `MCP healthz`: `http://localhost:8010/healthz`
+
+Si usas Ollama en el host, un valor comun para `.env` es:
+
+```bash
+LLM_API_BASE=http://host.docker.internal:11434/v1
+```
+
+Si queres levantar solo MCP + agente, sin las UIs, usa:
+
+```bash
+make up-core
+```
 
 Levantar MCP + agente:
 

@@ -39,6 +39,35 @@ make smoke
 
 La documentacion operativa de contenedores y troubleshooting esta en [deploy/README.md](deploy/README.md).
 
+### 1.1 Primera vez con Docker + AgentScope Studio
+
+Si es tu primera vez y solo queres probar el stack con Docker:
+
+1. Copia el entorno base y ajusta al menos `MCP_API_KEY` y `LLM_API_BASE`.
+2. Ejecuta `make build`.
+3. Ejecuta `make up`.
+4. `make up` levanta `AgentScope Studio`, el MCP, el agente y la visual remota.
+5. Al terminar, `make up` imprime las URLs locales mas importantes.
+6. Proba primero con `make smoke` o `make scenario`.
+7. Cuando quieras una sesion interactiva, hace `attach` al contenedor del agente.
+
+Comandos tipicos:
+
+```bash
+cp .env.example .env
+make build
+make up
+make smoke
+make scenario PROMPT="Decime que tools tenes disponibles y no muevas nada"
+docker compose --env-file .env -f deploy/docker-compose.yml attach arm-agent
+```
+
+Notas practicas:
+
+- `make up` ahora levanta `AgentScope Studio` y la visual remota por noVNC.
+- Si queres el comportamiento anterior sin UI, usa `make up-core`.
+- Si usas un LLM corriendo en el host con Ollama, en `.env` normalmente conviene `LLM_API_BASE=http://host.docker.internal:11434/v1`.
+
 ### 2. Desarrollo del agente
 
 ```bash
