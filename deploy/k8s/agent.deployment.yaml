@@ -22,7 +22,7 @@ spec:
             - name: LLM_API_BASE
               value: http://host.minikube.internal:8000/v1
             - name: AGENTSCOPE_STUDIO_URL
-              value: http://host.minikube.internal:3000
+              value: http://as-studio:3000
             - name: REME_WORKING_DIR
               value: /app/robotic-arm-agent/.reme
             - name: MCP_API_KEY

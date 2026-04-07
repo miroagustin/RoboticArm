@@ -267,3 +267,21 @@ make k8s-apply
 La variante k8s usa noVNC para visualizacion. Si las imagenes son locales, antes hay que cargarlas al cluster (`minikube image load`, `k3d image import`, etc.).
 
 `arm-agent` usa una `readinessProbe`/`livenessProbe` por `exec` con el mismo smoke check MCP del compose.
+
+`as-studio` ahora vive dentro del cluster y el agente lo consume por DNS interno:
+
+```text
+http://as-studio:3000
+```
+
+Para abrir AgentScope Studio desde tu maquina local:
+
+```bash
+kubectl port-forward -n arm svc/as-studio 3000:3000
+```
+
+Y luego abrir:
+
+```text
+http://localhost:3000
+```

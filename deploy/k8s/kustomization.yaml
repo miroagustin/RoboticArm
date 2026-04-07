@@ -5,9 +5,10 @@ resources:
   - namespace.yaml
   - configmap-cyclonedds.yaml
   - secret-mcp-key.yaml
+  - as-studio.deployment.yaml
+  - as-studio.service.yaml
   - mcp-sim.deployment.yaml
   - mcp-sim.service.yaml
   - agent.deployment.yaml
   - viz.deployment.yaml
   - viz.service.yaml
-

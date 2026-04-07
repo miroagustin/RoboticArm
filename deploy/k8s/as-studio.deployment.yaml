@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: as-studio
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: as-studio
+  template:
+    metadata:
+      labels:
+        app: as-studio
+    spec:
+      containers:
+        - name: as-studio
+          image: agentscope/studio:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 3000

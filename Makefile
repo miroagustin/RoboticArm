@@ -1,5 +1,6 @@
 COMPOSE_FILE := deploy/docker-compose.yml
-COMPOSE := docker compose --env-file .env -f $(COMPOSE_FILE)
+COMPOSE_ENV := env -u LLM_API_BASE -u MODEL_NAME -u MODEL_MAX_OUTPUT_TOKENS -u AGENTSCOPE_STUDIO_URL
+COMPOSE := $(COMPOSE_ENV) docker compose --env-file .env -f $(COMPOSE_FILE)
 BASE_IMAGE := mycobot-ros2-base:local
 K8S_DIR := deploy/k8s
 

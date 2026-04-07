@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: as-studio
+spec:
+  selector:
+    app: as-studio
+  ports:
+    - name: http
+      port: 3000
+      targetPort: http
