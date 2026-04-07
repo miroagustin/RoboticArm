@@ -60,6 +60,15 @@ REQUIRED_MCP_TOOLS = (
 #   --enforce-eager \
 #   --enable-auto-tool-choice \
 #   --tool-call-parser hermes
+#
+# Alternativa para Ollama + Gemma 4:
+# export LLM_API_BASE=http://localhost:11434/v1
+# export MODEL_NAME=gemma4:e2b
+# export MODEL_MAX_OUTPUT_TOKENS=768
+#
+# Nota: con gemma4:e2b en Ollama, los tool calls por /v1/chat/completions
+# pueden requerir mas tokens de salida que Qwen porque el modelo suele emitir
+# reasoning antes de devolver la llamada a herramienta.
 
 SYSTEM_PROMPT = """\
 Sos un operador de brazo robotico. Tu trabajo es interpretar instrucciones \
